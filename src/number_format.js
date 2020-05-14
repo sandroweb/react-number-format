@@ -46,7 +46,7 @@ const propTypes = {
     PropTypes.string
   ]),
   isNumericString: PropTypes.bool,
-  customInput: PropTypes.elementType,
+  customInput: PropTypes.func,
   allowNegative: PropTypes.bool,
   allowEmptyFormatting: PropTypes.bool,
   allowLeadingZeros: PropTypes.bool,

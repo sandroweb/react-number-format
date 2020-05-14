@@ -78,6 +78,19 @@ function _setPrototypeOf(o, p) {
   return _setPrototypeOf(o, p);
 }
 
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -92,6 +105,25 @@ function _possibleConstructorReturn(self, call) {
   }
 
   return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+  return function () {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (hasNativeReflectConstruct) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
 }
 
 function createCommonjsModule(fn, module) {
@@ -366,7 +398,7 @@ var propTypes$1 = {
   value: propTypes.oneOfType([propTypes.number, propTypes.string]),
   defaultValue: propTypes.oneOfType([propTypes.number, propTypes.string]),
   isNumericString: propTypes.bool,
-  customInput: propTypes.elementType,
+  customInput: propTypes.func,
   allowNegative: propTypes.bool,
   allowEmptyFormatting: propTypes.bool,
   allowLeadingZeros: propTypes.bool,
@@ -405,17 +437,17 @@ var defaultProps = {
   isAllowed: returnTrue
 };
 
-var NumberFormat =
-/*#__PURE__*/
-function (_React$Component) {
+var NumberFormat = /*#__PURE__*/function (_React$Component) {
   _inherits(NumberFormat, _React$Component);
+
+  var _super = _createSuper(NumberFormat);
 
   function NumberFormat(props) {
     var _this;
 
     _classCallCheck(this, NumberFormat);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(NumberFormat).call(this, props));
+    _this = _super.call(this, props);
     var defaultValue = props.defaultValue; //validate props
 
     _this.validateProps();
@@ -1335,17 +1367,17 @@ function (_React$Component) {
       });
 
       if (displayType === 'text') {
-        return renderText ? renderText(value) || null : React.createElement("span", _extends({}, otherProps, {
+        return renderText ? renderText(value) || null : /*#__PURE__*/React.createElement("span", _extends({}, otherProps, {
           ref: getInputRef
         }), value);
       } else if (customInput) {
         var CustomInput = customInput;
-        return React.createElement(CustomInput, _extends({}, inputProps, {
+        return /*#__PURE__*/React.createElement(CustomInput, _extends({}, inputProps, {
           ref: getInputRef
         }));
       }
 
-      return React.createElement("input", _extends({}, inputProps, {
+      return /*#__PURE__*/React.createElement("input", _extends({}, inputProps, {
         ref: getInputRef
       }));
     }
